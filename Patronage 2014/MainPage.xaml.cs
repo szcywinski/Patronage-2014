@@ -17,9 +17,25 @@ namespace Patronage_2014
         public MainPage()
         {
             InitializeComponent();
+            BuildLocalizedApplicationBar();
+        }
+        private void BuildLocalizedApplicationBar()
+        {
+            
+            ApplicationBar = new ApplicationBar();
 
-            // Sample code to localize the ApplicationBar
-            //BuildLocalizedApplicationBar();
+            ApplicationBarIconButton appBarButton =
+                new ApplicationBarIconButton(new
+                Uri("/Images/add.png", UriKind.Relative));
+            appBarButton.Text = AppResources.Add;
+            appBarButton.Click += new EventHandler(AddButton_Click);
+            ApplicationBar.Buttons.Add(appBarButton);
+            
+        }
+
+        private void AddButton_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/AddNewPersonPage.xaml", UriKind.Relative));
         }
 
         // Sample code for building a localized ApplicationBar
