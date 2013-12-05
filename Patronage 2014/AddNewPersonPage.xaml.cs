@@ -30,7 +30,7 @@ namespace Patronage_2014
             ApplicationBarIconButton appBarButton =
                 new ApplicationBarIconButton(new
                 Uri("/Images/save.png", UriKind.Relative));
-            appBarButton.Text = AppResources.Add;
+            appBarButton.Text = AppResources.Save;
             appBarButton.IsEnabled = false;
             ApplicationBar.Buttons.Add(appBarButton);
 
