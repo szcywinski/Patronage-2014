@@ -13,9 +13,13 @@ namespace Patronage_2014
 {
     public partial class AddNewPersonPage : PhoneApplicationPage
     {
+        private Decimal[] Grades = { 2, 2.5m, 3, 3.5m, 4, 4.5m, 5 };
+
         public AddNewPersonPage()
         {
             InitializeComponent();
+            BuildLocalizedApplicationBar();
+            GradePicker.ItemsSource = Grades;
         }
 
         private void BuildLocalizedApplicationBar()
