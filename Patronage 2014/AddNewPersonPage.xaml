@@ -12,7 +12,8 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    x:Name="AddNPPage">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -44,9 +45,10 @@
             <TextBlock Grid.Row="2" Text="{Binding Path=LocalizedResources.LastName, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}" />
             <TextBox Grid.Row="3" Height="72" TextWrapping="Wrap" Text=""/>
             <TextBlock Grid.Row="4" Text="{Binding Path=LocalizedResources.Grade, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}" />
-            <toolkit:ListPicker Grid.Row="5" x:Name="GradePicker"  
-                                    FullModeHeader="{Binding Path=LocalizedResources.Grade, Source={StaticResource LocalizedStrings}}"
-                                    Margin="24,12,12,0"/>
+            <toolkit:ListPicker Grid.Row="5"
+                                ItemsSource="{Binding Grades, ElementName=AddNPPage}"
+                                FullModeHeader="{Binding Path=LocalizedResources.Grade, Source={StaticResource LocalizedStrings}}"
+                                Margin="24,12,12,0"/>
         </Grid>
     </Grid>
 
