@@ -42,6 +42,13 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
+
+                            <Grid.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Margin" Value="0,0,4,0" />
+                                </Style>
+                            </Grid.Resources>
+
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
@@ -54,11 +61,13 @@
 
                             <TextBlock Text="{Binding Path=LocalizedResources.FirstName, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="0" Grid.Column="0" />
                             <TextBlock Text="{Binding Path=LocalizedResources.LastName, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="1" Grid.Column="0" />
-                            <TextBlock Text="{Binding Path=LocalizedResources.GradeName, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="2" Grid.Column="0" />
-
+                            <TextBlock Text="{Binding Path=LocalizedResources.Grade, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="2" Grid.Column="0" />
+                            
                             <TextBlock Text="{Binding FirstName}" Grid.Row="0" Grid.Column="1" />
                             <TextBlock Text="{Binding LastName}" Grid.Row="1" Grid.Column="1" />
                             <TextBlock Text="{Binding Grade}" Grid.Row="2" Grid.Column="1" />
+                            
+                            
 
                         </Grid>
                     </DataTemplate>
