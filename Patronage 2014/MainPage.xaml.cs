@@ -14,33 +14,21 @@ namespace Patronage_2014
 {
     public partial class MainPage : PhoneApplicationPage
     {
-
-        public  ReadOnlyCollection <Student> Students { get; set; }
         
         public MainPage()
         {
             InitializeComponent();
             BuildLocalizedApplicationBar();
+            DataContext = StudentService.Instance;
+
             StudentService.Instance.AddStudent(new Student(){FirstName="Janusz", LastName="Pień", Grade=3m});
             StudentService.Instance.AddStudent(new Student() { FirstName = "Mariusz", LastName = "Łoś", Grade = 3.5m });
-        
-            Students = StudentService.Instance.GetStudentList();
-
             StudentService.Instance.AddStudent(new Student() { FirstName = "Rajmund", LastName = "Wafel", Grade = 5m });
 
             
         }
 
-        //private void MainPage_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    StudentService.Instance.Students.Add(new Student(){FirstName="Janusz", LastName="Pień", Grade=3m});
-        //    StudentService.Instance.Students.Add(new Student(){FirstName="Mariusz", LastName="Łoś", Grade=3.5m});
-        //    StudentService.Instance.Students.Add(new Student(){FirstName="Rajmund", LastName="Wafel", Grade=5m});
-            
-        //    //StudentList.ItemsSource =StudentService.Instance.Students;
-            
-
-        //}
+       
 
         private void BuildLocalizedApplicationBar()
         {

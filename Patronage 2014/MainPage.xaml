@@ -36,7 +36,7 @@
 
             <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,12" >
                 <TextBlock Text="{Binding Path=LocalizedResources.Average, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:' }" />
-                <TextBlock Text="{Binding AverageGrade}"/>
+                <TextBlock Text="{Binding AverageGrade, StringFormat=N2}"/>
             </StackPanel>
 
             <ListBox Grid.Row="1" Name="StudentList" ItemsSource="{Binding Students, Mode=OneWay}" >
