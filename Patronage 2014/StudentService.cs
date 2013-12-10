@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,18 @@ namespace Patronage_2014
     public sealed class StudentService
     {
         private StudentService() { }
+        private static readonly object syncRoot = new object();
+        private List<Student> studentList;
 
-        public List<Student> Students { get; private set;}
+        public ReadOnlyCollection<Student> GetStudentList()
+        {
+            return studentList.AsReadOnly();
+        } 
         
+        public void AddStudent(Student student)
+        {
+            studentList.Add(student);
+        }
         
         private static StudentService instance;
 
@@ -19,12 +29,15 @@ namespace Patronage_2014
         {
             get
             {
-                if (instance == null)
+                lock (syncRoot)
                 {
-                    instance = new StudentService();
-                    instance.Students = new List<Student>();
+                    if (instance == null)
+                    {
+                        instance = new StudentService();
+                        instance.studentList = new List<Student>();
+                    }
+                    return instance;
                 }
-                return instance;
             }
         }
 
