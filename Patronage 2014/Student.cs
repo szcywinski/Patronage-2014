@@ -8,10 +8,11 @@ namespace Patronage_2014
 {
     public class Student
     {
-        private String firstName;
-        private String lastName;
-        private Decimal grade;
+        private String firstName="";
+        private String lastName="";
+        private Decimal grade=2m;
 
+        
         public String FirstName
         {
             get { return firstName; }
