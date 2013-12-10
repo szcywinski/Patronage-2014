@@ -27,8 +27,44 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="24,0,24,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,12" >
+                <TextBlock Text="{Binding Path=LocalizedResources.Average, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:' }" />
+                <TextBlock Text="{Binding AverageGrade}"/>
+            </StackPanel>
+
+            <ListBox Grid.Row="1" Name="StudentList">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="{Binding Path=LocalizedResources.FirstName, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="0" Grid.Column="0" />
+                            <TextBlock Text="{Binding Path=LocalizedResources.LastName, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="1" Grid.Column="0" />
+                            <TextBlock Text="{Binding Path=LocalizedResources.GradeName, Source={StaticResource LocalizedStrings}, StringFormat='{}{0}:'}" Grid.Row="2" Grid.Column="0" />
+
+                            <TextBlock Text="{Binding FirstName}" Grid.Row="0" Grid.Column="1" />
+                            <TextBlock Text="{Binding LastName}" Grid.Row="1" Grid.Column="1" />
+                            <TextBlock Text="{Binding Grade}" Grid.Row="2" Grid.Column="1" />
+
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>                
+            </ListBox>
+            
         </Grid>
 
         
