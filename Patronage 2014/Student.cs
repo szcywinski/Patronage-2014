@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Patronage_2014.Model
+namespace Patronage_2014
 {
     public class Student
     {

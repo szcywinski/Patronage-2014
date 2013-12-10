@@ -8,7 +8,6 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Patronage_2014.Resources;
-using Patronage_2014.Model;
 
 namespace Patronage_2014
 {
@@ -24,13 +23,11 @@ namespace Patronage_2014
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            List<Student> studentList = new List<Student>()
-            {
-                new Student(){FirstName="Janusz", LastName="Pień", Grade=3m},
-                new Student(){FirstName="Mariusz", LastName="Łoś", Grade=3.5m},
-            };
-
-            StudentList.ItemsSource = studentList;
+            StudentService.Instance.Students.Add(new Student(){FirstName="Janusz", LastName="Pień", Grade=3m});
+            StudentService.Instance.Students.Add(new Student(){FirstName="Mariusz", LastName="Łoś", Grade=3.5m});
+            StudentService.Instance.Students.Add(new Student(){FirstName="Rajmund", LastName="Wafel", Grade=5m});
+            
+            StudentList.ItemsSource =StudentService.Instance.Students;
             
 
         }
