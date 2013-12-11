@@ -20,12 +20,6 @@ namespace Patronage_2014
             InitializeComponent();
             BuildLocalizedApplicationBar();
             DataContext = StudentService.Instance;
-
-            StudentService.Instance.AddStudent(new Student(){FirstName="Janusz", LastName="Pień", Grade=3m});
-            StudentService.Instance.AddStudent(new Student() { FirstName = "Mariusz", LastName = "Łoś", Grade = 3.5m });
-            StudentService.Instance.AddStudent(new Student() { FirstName = "Rajmund", LastName = "Wafel", Grade = 5m });
-
-            
         }
 
        
