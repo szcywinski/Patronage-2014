@@ -46,6 +46,14 @@ namespace Patronage_2014
 
         private void AddButton_Click(object sender, EventArgs e)
         {
+            PhoneApplicationService.Current.State["CurrentStudent"] = null;
+            NavigationService.Navigate(new Uri("/AddNewPersonPage.xaml", UriKind.Relative));
+        }
+
+        private void StudentList_DoubleTap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            var tapItem = (sender as Border).DataContext;
+            PhoneApplicationService.Current.State["CurrentStudent"] = tapItem;
             NavigationService.Navigate(new Uri("/AddNewPersonPage.xaml", UriKind.Relative));
         }
 

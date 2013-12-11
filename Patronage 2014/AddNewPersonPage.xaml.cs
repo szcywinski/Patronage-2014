@@ -16,13 +16,27 @@ namespace Patronage_2014
     {
         public IEnumerable <Decimal> Grades { get; set; }
         public Student CurrentStudent { get; set; }
-
+        
+        private Student editedStudent;
+        private bool edit;
         public AddNewPersonPage()
         {
             InitializeComponent();
             BuildLocalizedApplicationBar();
             Grades = new List<Decimal>() { 2, 2.5m, 3, 3.5m, 4, 4.5m, 5 };
-            CurrentStudent = new Student();
+
+            var student = PhoneApplicationService.Current.State["CurrentStudent"];
+            if (student != null && student is Student)
+            {
+                editedStudent = (Student)student;
+                CurrentStudent = StudentService.Instance.CloneStudent(editedStudent);
+                edit = true;
+            }
+            else
+            {
+                edit=false;
+                CurrentStudent = new Student();
+            }
         }
 
         private void BuildLocalizedApplicationBar()
@@ -42,11 +56,18 @@ namespace Patronage_2014
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            StudentService.Instance.AddStudent(CurrentStudent);
+            if (edit)
+            {
+                StudentService.Instance.CopyStudentTo(CurrentStudent, editedStudent);
+            }
+            else
+            {
+                StudentService.Instance.AddStudent(CurrentStudent);
+            }
             NavigationService.GoBack();
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void Form_TextChanged(object sender, TextChangedEventArgs e)
         {
             BindingExpression bindingExpression =
             ((TextBox)sender).GetBindingExpression(TextBox.TextProperty);
@@ -54,17 +75,43 @@ namespace Patronage_2014
             {
                 bindingExpression.UpdateSource();
             }
+            EnableButton();
+        }
 
+        private void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EnableButton();
+        }
+
+        private void EnableButton()
+        {
+            
             ApplicationBarIconButton appBarButton = (ApplicationBarIconButton)ApplicationBar.Buttons[0];
             if (appBarButton.Text == AppResources.Save)
             {
-                if(CurrentStudent.FirstName.Length>0 || CurrentStudent.LastName.Length>0 )
+                if (edit)
                 {
-                    appBarButton.IsEnabled = true;
+                    if (CurrentStudent.FirstName != editedStudent.FirstName ||
+                        CurrentStudent.LastName != editedStudent.LastName ||
+                        CurrentStudent.Grade != editedStudent.Grade)
+                    {
+                        appBarButton.IsEnabled = true;
+                    }
+                    else
+                    {
+                        appBarButton.IsEnabled = false;
+                    }
                 }
                 else
                 {
-                    appBarButton.IsEnabled = false;
+                    if (CurrentStudent.FirstName.Length > 0 || CurrentStudent.LastName.Length > 0)
+                    {
+                        appBarButton.IsEnabled = true;
+                    }
+                    else
+                    {
+                        appBarButton.IsEnabled = false;
+                    }
                 }
             }
         }

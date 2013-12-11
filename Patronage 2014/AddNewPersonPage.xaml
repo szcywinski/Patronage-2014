@@ -41,15 +41,16 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="{Binding Path=LocalizedResources.FirstName, Source={StaticResource LocalizedStrings}}" Grid.Row="0" Style="{StaticResource PhoneTextNormalStyle}" />
-            <TextBox  Grid.Row="1" Height="72" TextWrapping="Wrap" Text="{Binding CurrentStudent.FirstName, Mode=TwoWay}" TextChanged="TextBox_TextChanged"/>
+            <TextBox  Grid.Row="1" Height="72" TextWrapping="Wrap" Text="{Binding CurrentStudent.FirstName, Mode=TwoWay}" TextChanged="Form_TextChanged"/>
             <TextBlock Grid.Row="2" Text="{Binding Path=LocalizedResources.LastName, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}" />
-            <TextBox Grid.Row="3" Height="72" TextWrapping="Wrap" Text="{Binding CurrentStudent.LastName, Mode=TwoWay}" TextChanged="TextBox_TextChanged"/>
+            <TextBox Grid.Row="3" Height="72" TextWrapping="Wrap" Text="{Binding CurrentStudent.LastName, Mode=TwoWay}" TextChanged="Form_TextChanged"/>
             <TextBlock Grid.Row="4" Text="{Binding Path=LocalizedResources.Grade, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}" />
             <toolkit:ListPicker Grid.Row="5"
                                 ItemsSource="{Binding Grades}"
-                                SelectedItem="{Binding CurrentStudent.Grade}"
+                                SelectedItem="{Binding CurrentStudent.Grade, Mode=TwoWay}"
+                                
                                 FullModeHeader="{Binding Path=LocalizedResources.Grade, Source={StaticResource LocalizedStrings}}"
-                                Margin="24,12,12,0"/>
+                                Margin="24,12,12,0" SelectionChanged="ListPicker_SelectionChanged"/>
         </Grid>
     </Grid>
 

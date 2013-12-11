@@ -21,6 +21,7 @@ namespace Patronage_2014
         public Decimal AverageGrade 
         {
             get { return averageGrade; }
+            private set { averageGrade = value; NotifyPropertyChanged("AverageGrade"); }
         }
 
         public ReadOnlyCollection<Student> Students 
@@ -32,8 +33,7 @@ namespace Patronage_2014
         {
             students.Add(student);
             NotifyPropertyChanged("Students");
-            averageGrade = Students.Sum(s => s.Grade) / Students.Count;
-            NotifyPropertyChanged("AverageGrade");
+            AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
         }
        
         static public StudentService Instance
@@ -47,7 +47,6 @@ namespace Patronage_2014
                         instance = new StudentService();
                         instance.students = new List<Student>();
                         instance.averageGrade = 0m;
-
                     }
                     return instance;
                 }
@@ -64,5 +63,26 @@ namespace Patronage_2014
             }
         }
 
+        public Student CloneStudent(Student student)
+        {
+            Student copy = new Student
+            {
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Grade = student.Grade
+            };
+            return copy;
+        }
+
+        public void CopyStudentTo(Student source, Student destination)
+        {
+            destination.FirstName = source.FirstName;
+            destination.LastName = source.LastName;
+            if (destination.Grade != source.Grade)
+            {
+                destination.Grade = source.Grade;
+                AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
+            }
+        }
     }
 }
