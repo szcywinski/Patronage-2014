@@ -88,10 +88,8 @@ namespace Patronage_2014
             ApplicationBarIconButton appBarButton = (ApplicationBarIconButton)ApplicationBar.Buttons[0];
             if (appBarButton.Text == AppResources.Save)
             {
-                if (!String.IsNullOrEmpty(CurrentStudent.FirstName) && !String.IsNullOrEmpty(CurrentStudent.LastName) && 
-                    (edit ? CurrentStudent.FirstName != editedStudent.FirstName 
-                        || CurrentStudent.LastName != editedStudent.LastName 
-                        || CurrentStudent.Grade != editedStudent.Grade : true))
+                if (!String.IsNullOrEmpty(CurrentStudent.FirstName) && !String.IsNullOrEmpty(CurrentStudent.LastName) &&
+                    (!edit || CurrentStudent.FirstName != editedStudent.FirstName || CurrentStudent.LastName != editedStudent.LastName || CurrentStudent.Grade != editedStudent.Grade))
                 {
                     appBarButton.IsEnabled = true;
                 }
