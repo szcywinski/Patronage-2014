@@ -15,14 +15,15 @@ namespace Patronage_2014
     public partial class MainPage : PhoneApplicationPage
     {
         
+        private bool isNewPageInstance;
         public MainPage()
         {
             InitializeComponent();
             BuildLocalizedApplicationBar();
             DataContext = StudentService.Instance;
+            isNewPageInstance=true;
         }
-
-       
+              
 
         private void BuildLocalizedApplicationBar()
         {
@@ -50,6 +51,19 @@ namespace Patronage_2014
             PhoneApplicationService.Current.State["CurrentStudent"] = tapItem;
             NavigationService.Navigate(new Uri("/AddNewPersonPage.xaml", UriKind.Relative));
         }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            if (isNewPageInstance)
+            {
+                StudentService.LoadState();
+                DataContext = StudentService.Instance;
+            }
+
+            isNewPageInstance = false;
+        }
+
+
 
     }
 }

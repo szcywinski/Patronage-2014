@@ -1,10 +1,17 @@
-﻿using System;
+﻿using Microsoft.Phone.Shell;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace Patronage_2014
 {
@@ -33,7 +40,7 @@ namespace Patronage_2014
         {
             students.Add(student);
             NotifyPropertyChanged("Students");
-            AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
+            CalculateAverage();
         }
        
         static public StudentService Instance
@@ -81,8 +88,77 @@ namespace Patronage_2014
             if (destination.Grade != source.Grade)
             {
                 destination.Grade = source.Grade;
-                AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
+                CalculateAverage();
             }
         }
+
+        private decimal CalculateAverage()
+        {
+            return AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
+        }
+
+        public async void SaveState()
+        {
+            PhoneApplicationService.Current.State["StudentService"] = this;
+           
+            // Serialize our Product class into a string             
+            string jsonContents = JsonConvert.SerializeObject(students);
+            // Get the app data folder and create or replace the file we are storing the JSON in.            
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile textFile = await localFolder.CreateFileAsync("students",
+                                            CreationCollisionOption.ReplaceExisting);
+            // Open the file...      
+            using (IRandomAccessStream textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                // write the JSON string!
+                using (DataWriter textWriter = new DataWriter(textStream))
+                {
+                    textWriter.WriteString(jsonContents);
+                    await textWriter.StoreAsync();
+                }
+            }
+            
+
+        }
+
+        public async static void LoadState()
+        {
+            if(PhoneApplicationService.Current.State.ContainsKey("StudentService"))
+            {
+                instance = PhoneApplicationService.Current.State["StudentService"] as StudentService;
+            }
+            else
+            {
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                try
+                {
+                    // Getting JSON from file if it exists, or file not found exception if it does not  
+                    StorageFile textFile = await localFolder.GetFileAsync("students");
+                    using (IRandomAccessStream textStream = await textFile.OpenReadAsync())
+                    {
+                        // Read text stream     
+                        using (DataReader textReader = new DataReader(textStream))
+                        {
+                            //get size                       
+                            uint textLength = (uint)textStream.Size;
+                            await textReader.LoadAsync(textLength);
+                            // read it                    
+                            string jsonContents = textReader.ReadString(textLength);
+                            // deserialize back to our product!  
+                            //instance = JsonConvert.DeserializeObject<IList<Student>>(jsonContents) as List<Student>;
+                            instance.students = JsonConvert.DeserializeObject<IList<Student>>(jsonContents) as List<Student>;
+                            instance.NotifyPropertyChanged("Students");
+                            instance.CalculateAverage();
+                            
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+            }
+        }
+
     }
 }

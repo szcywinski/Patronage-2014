@@ -64,6 +64,7 @@ namespace Patronage_2014
             {
                 StudentService.Instance.AddStudent(CurrentStudent);
             }
+            StudentService.Instance.SaveState();
             NavigationService.GoBack();
         }
 
