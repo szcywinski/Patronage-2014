@@ -92,9 +92,9 @@ namespace Patronage_2014
             }
         }
 
-        private decimal CalculateAverage()
+        private void CalculateAverage()
         {
-            return AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
+            AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
         }
 
         public async void SaveState()
