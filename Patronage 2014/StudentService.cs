@@ -101,16 +101,15 @@ namespace Patronage_2014
         {
             PhoneApplicationService.Current.State["StudentService"] = this;
            
-            // Serialize our Product class into a string             
+                      
             string jsonContents = JsonConvert.SerializeObject(students);
-            // Get the app data folder and create or replace the file we are storing the JSON in.            
+                      
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile textFile = await localFolder.CreateFileAsync("students",
                                             CreationCollisionOption.ReplaceExisting);
-            // Open the file...      
+                  
             using (IRandomAccessStream textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                // write the JSON string!
                 using (DataWriter textWriter = new DataWriter(textStream))
                 {
                     textWriter.WriteString(jsonContents);
@@ -123,29 +122,31 @@ namespace Patronage_2014
 
         public async static void LoadState()
         {
+
             if(PhoneApplicationService.Current.State.ContainsKey("StudentService"))
             {
                 instance = PhoneApplicationService.Current.State["StudentService"] as StudentService;
+                instance.NotifyPropertyChanged("Students");
+                instance.CalculateAverage();
             }
             else
             {
                 StorageFolder localFolder = ApplicationData.Current.LocalFolder;
                 try
                 {
-                    // Getting JSON from file if it exists, or file not found exception if it does not  
+                    
                     StorageFile textFile = await localFolder.GetFileAsync("students");
                     using (IRandomAccessStream textStream = await textFile.OpenReadAsync())
                     {
-                        // Read text stream     
+                        
                         using (DataReader textReader = new DataReader(textStream))
                         {
-                            //get size                       
+                            
                             uint textLength = (uint)textStream.Size;
                             await textReader.LoadAsync(textLength);
-                            // read it                    
+                            
                             string jsonContents = textReader.ReadString(textLength);
-                            // deserialize back to our product!  
-                            //instance = JsonConvert.DeserializeObject<IList<Student>>(jsonContents) as List<Student>;
+                            
                             instance.students = JsonConvert.DeserializeObject<IList<Student>>(jsonContents) as List<Student>;
                             instance.NotifyPropertyChanged("Students");
                             instance.CalculateAverage();
