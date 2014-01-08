@@ -93,7 +93,8 @@ namespace Patronage_2014
 
         private void CalculateAverage()
         {
-            AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
+            if (Students.Count>0)
+                AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
         }
 
         public void SaveState()
