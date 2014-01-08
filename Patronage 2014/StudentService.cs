@@ -10,8 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace Patronage_2014
 {
@@ -96,26 +96,19 @@ namespace Patronage_2014
             AverageGrade = Students.Sum(s => s.Grade) / Students.Count;
         }
 
-        public async void SaveState()
+        public void SaveState()
         {
             try
             {
                 PhoneApplicationService.Current.State["StudentList"] = this.students;
 
-                string jsonContents = JsonConvert.SerializeObject(students);
+                IsolatedStorageFile isoFile = System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication(); 
+                DataContractSerializer serializer = new DataContractSerializer(typeof(IList<Student>));
 
-                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-                StorageFile textFile = await localFolder.CreateFileAsync("students",
-                                                CreationCollisionOption.ReplaceExisting);
-
-                using (IRandomAccessStream textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite))
+                using (var targetFile = isoFile.CreateFile("students"))
                 {
-                    using (DataWriter textWriter = new DataWriter(textStream))
-                    {
-                        textWriter.WriteString(jsonContents);
-                        await textWriter.StoreAsync();
-                    }
-                }
+                    serializer.WriteObject(targetFile, this.students);
+                } 
             }
             catch (Exception e)
             {
@@ -124,7 +117,7 @@ namespace Patronage_2014
 
         }
 
-        private async static void LoadState()
+        private static void LoadState()
         {
 
             if(PhoneApplicationService.Current.State.ContainsKey("StudentList"))
@@ -135,34 +128,26 @@ namespace Patronage_2014
             }
             else
             {
-                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
                 try
                 {
-                    
-                    StorageFile textFile = await localFolder.GetFileAsync("students");
-                    using (IRandomAccessStream textStream = await textFile.OpenReadAsync())
+                    instance.students = new List<Student>();
+                    instance.averageGrade = 0m;
+
+                    IsolatedStorageFile isoFile = System.IO.IsolatedStorage.IsolatedStorageFile.GetUserStoreForApplication(); 
+                    DataContractSerializer serializer = new DataContractSerializer(typeof(IList<Student>));
+
+                    if (isoFile.FileExists("students")) 
+                    using (var sourceStream = isoFile.OpenFile("students", FileMode.Open)) 
                     {
-                        
-                        using (DataReader textReader = new DataReader(textStream))
-                        {
-                            
-                            uint textLength = (uint)textStream.Size;
-                            await textReader.LoadAsync(textLength);
-                            
-                            string jsonContents = textReader.ReadString(textLength);
-                            
-                            instance.students = JsonConvert.DeserializeObject<IList<Student>>(jsonContents) as List<Student>;
-                            instance.NotifyPropertyChanged("Students");
-                            instance.CalculateAverage();
-                            
-                        }
-                    }
+                        instance.students.AddRange((Student[])serializer.ReadObject(sourceStream));
+                    } 
+
+                    instance.NotifyPropertyChanged("Students");
+                    instance.CalculateAverage();
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
-                    instance.students = new List<Student>();
-                    instance.averageGrade = 0m;
                 }
             }
         }
