@@ -52,8 +52,7 @@ namespace Patronage_2014
                     if (instance == null)
                     {
                         instance = new StudentService();
-                        instance.students = new List<Student>();
-                        instance.averageGrade = 0m;
+                        LoadState();
                     }
                     return instance;
                 }
@@ -99,33 +98,38 @@ namespace Patronage_2014
 
         public async void SaveState()
         {
-            PhoneApplicationService.Current.State["StudentService"] = this;
-           
-                      
-            string jsonContents = JsonConvert.SerializeObject(students);
-                      
-            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-            StorageFile textFile = await localFolder.CreateFileAsync("students",
-                                            CreationCollisionOption.ReplaceExisting);
-                  
-            using (IRandomAccessStream textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite))
+            try
             {
-                using (DataWriter textWriter = new DataWriter(textStream))
+                PhoneApplicationService.Current.State["StudentList"] = this.students;
+
+                string jsonContents = JsonConvert.SerializeObject(students);
+
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                StorageFile textFile = await localFolder.CreateFileAsync("students",
+                                                CreationCollisionOption.ReplaceExisting);
+
+                using (IRandomAccessStream textStream = await textFile.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    textWriter.WriteString(jsonContents);
-                    await textWriter.StoreAsync();
+                    using (DataWriter textWriter = new DataWriter(textStream))
+                    {
+                        textWriter.WriteString(jsonContents);
+                        await textWriter.StoreAsync();
+                    }
                 }
             }
-            
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
 
         }
 
-        public async static void LoadState()
+        private async static void LoadState()
         {
 
-            if(PhoneApplicationService.Current.State.ContainsKey("StudentService"))
+            if(PhoneApplicationService.Current.State.ContainsKey("StudentList"))
             {
-                instance = PhoneApplicationService.Current.State["StudentService"] as StudentService;
+                instance.students = PhoneApplicationService.Current.State["StudentList"] as List<Student>;
                 instance.NotifyPropertyChanged("Students");
                 instance.CalculateAverage();
             }
@@ -157,6 +161,8 @@ namespace Patronage_2014
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    instance.students = new List<Student>();
+                    instance.averageGrade = 0m;
                 }
             }
         }
